@@ -1,21 +1,30 @@
-import { Drawer, Grid, Divider } from "@mui/material";
+import { Drawer, Grid, Divider, List } from "@mui/material";
 import ChatListHeader from "./ChatListHeader";
+import SearchChatListItem from "./SearchChatListItem";
 
 const drawerWidth = 320;
 
 const ChatListDrawer = () => {
-  return <Grid sx={{ width: { sm: drawerWidth } }}>
-    <Drawer variant="permanent"
-    sx={{
-        "& .MuiDrawer-paper": {
+  return (
+    <Grid sx={{ width: { sm: drawerWidth } }}>
+      <Drawer
+        variant="permanent"
+        sx={{
+          "& .MuiDrawer-paper": {
             boxSizing: "border-box",
-            width: drawerWidth
-        }
-    }} >
+            width: drawerWidth,
+          },
+        }}
+      >
         <ChatListHeader />
         <Divider />
-    </Drawer>
-  </Grid>;
+        <List>
+          <SearchChatListItem />
+          <Divider />
+        </List>
+      </Drawer>
+    </Grid>
+  );
 };
 
 export default ChatListDrawer;
