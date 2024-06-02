@@ -1,6 +1,8 @@
 import { Drawer, Grid, Divider, List } from "@mui/material";
 import ChatListHeader from "./ChatListHeader";
 import SearchChatListItem from "./SearchChatListItem";
+import ChatListHeading from "./ChatListHeading";
+import ChatListItems from "./ChatListItems";
 
 const drawerWidth = 320;
 
@@ -21,6 +23,8 @@ const ChatListDrawer = () => {
         <List>
           <SearchChatListItem />
           <Divider />
+          <ChatListHeading />
+          <ChatListItems />
         </List>
       </Drawer>
     </Grid>
