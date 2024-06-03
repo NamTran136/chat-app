@@ -4,9 +4,11 @@ import SearchChatListItem from "./SearchChatListItem";
 import ChatListHeading from "./ChatListHeading";
 import ChatListItems from "./ChatListItems";
 
-const drawerWidth = 320;
+interface ChatListDrawerProps {
+  drawerWidth: number;
+}
 
-const ChatListDrawer = () => {
+const ChatListDrawer = ({drawerWidth}: ChatListDrawerProps) => {
   return (
     <Grid sx={{ width: { sm: drawerWidth } }}>
       <Drawer
