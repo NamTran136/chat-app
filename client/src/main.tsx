@@ -1,18 +1,21 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './global.css'
-import ThemeContextProvider from './contexts/ThemeContextProvider.tsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./global.css";
+import ThemeContextProvider from "./contexts/ThemeContextProvider.tsx";
 import { BrowserRouter } from "react-router-dom";
-import AllRoutes from './shared/AllRoutes.tsx'
+import AllRoutes from "./shared/AllRoutes.tsx";
+import { Toaster } from "react-hot-toast";
+import AuthContextProvider from "./contexts/AuthContext.tsx";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeContextProvider>
       <BrowserRouter>
-        <AllRoutes />
+        <AuthContextProvider>
+          <AllRoutes />
+          <Toaster position="top-right" reverseOrder={false} />
+        </AuthContextProvider>
       </BrowserRouter>
-      
     </ThemeContextProvider>
-    
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);

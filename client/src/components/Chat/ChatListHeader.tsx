@@ -50,8 +50,8 @@ const ChatListHeader = () => {
         </IconButton>
       </Grid>
       <SettingsMenu
-        settingsMenuAnchorEl={settingsMenuAnchorEl}
-        setSettingsMenuAnchorEl={setSettingsMenuAnchorEl}
+        settingsAnchorEl={settingsMenuAnchorEl}
+        setSettingsAnchorEl={setSettingsMenuAnchorEl}
       />
     </Toolbar>
   );

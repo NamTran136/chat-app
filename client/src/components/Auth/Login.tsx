@@ -1,9 +1,12 @@
-import { Grid, Paper, Typography, useTheme } from "@mui/material";
+import { Grid, IconButton, Paper, Typography, useTheme } from "@mui/material";
 import CustomTextField from "../../Custom/CustomTextField";
 import CustomButton from "../../Custom/CustomButton";
+import useAuth from "../../hooks/useAuth";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Login = () => {
   const theme = useTheme();
+  const {loading, loginData, handleLoginDataChange, handleLogin} = useAuth();
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid
@@ -26,6 +29,14 @@ const Login = () => {
           required
           size="small"
           type="email"
+          onChange={(
+            event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleLoginDataChange({
+              key: "email",
+              value: event?.target.value,
+            });
+          }}
         />
         <CustomTextField
           placeholder="Enter your password"
@@ -33,8 +44,39 @@ const Login = () => {
           type="password"
           required
           size="small"
+          onChange={(
+            event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleLoginDataChange({
+              key: "password",
+              value: event?.target.value,
+            });
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                onClick={() => {
+                  handleLoginDataChange({
+                    key: "showP",
+                    value: !loginData?.showP,
+                  });
+                }}
+              >
+                {loginData?.showP ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            ),
+          }}
         />
-        <CustomButton variant="contained">Sign In</CustomButton>
+        <CustomButton
+          loading={loading === "login"}
+          disabled={loading === "login"}
+          onClick={() => {
+            handleLogin();
+          }}
+          variant="contained"
+        >
+          Sign In
+        </CustomButton>
       </Grid>
     </Grid>
   );

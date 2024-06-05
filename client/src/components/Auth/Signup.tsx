@@ -1,9 +1,13 @@
-import { Grid, Paper, Typography, useTheme } from "@mui/material";
+import { Grid, IconButton, Paper, Typography, useTheme } from "@mui/material";
 import CustomTextField from "../../Custom/CustomTextField";
 import CustomButton from "../../Custom/CustomButton";
+import useAuth from "../../hooks/useAuth";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Signup = () => {
-    const theme = useTheme();
+  const theme = useTheme();
+  const { handleSignup, handleSignupDataChange, signupData, loading } =
+    useAuth();
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid
@@ -21,34 +25,107 @@ const Signup = () => {
           Sign Up
         </Typography>
         <CustomTextField
+          value={signupData?.email}
           placeholder="Enter your email"
           label="Email"
           required
           size="small"
           type="email"
+          onChange={(
+            event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleSignupDataChange({
+              key: "email",
+              value: event?.target.value,
+            });
+          }}
         />
         <CustomTextField
+          value={signupData?.fullName}
           placeholder="Enter your full name"
           label="Full Name"
           required
           size="small"
           type="text"
+          onChange={(
+            event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleSignupDataChange({
+              key: "fullName",
+              value: event?.target.value,
+            });
+          }}
         />
         <CustomTextField
+          value={signupData?.password}
           placeholder="Enter your password"
           label="Password"
-          type="password"
+          type={signupData?.showP ? "text" : "password"}
           required
           size="small"
+          onChange={(
+            event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleSignupDataChange({
+              key: "password",
+              value: event?.target.value,
+            });
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                onClick={() => {
+                  handleSignupDataChange({
+                    key: "showP",
+                    value: !signupData?.showP,
+                  });
+                }}
+              >
+                {signupData?.showP ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            ),
+          }}
         />
         <CustomTextField
+          value={signupData?.cPassword}
           placeholder="Confirm your password"
           label="Password"
-          type="password"
+          type={signupData?.showCP ? "text" : "password"}
           required
           size="small"
+          onChange={(
+            event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleSignupDataChange({
+              key: "cPassword",
+              value: event?.target.value,
+            });
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                onClick={() => {
+                  handleSignupDataChange({
+                    key: "showCP",
+                    value: !signupData?.showCP,
+                  });
+                }}
+              >
+                {signupData?.showCP ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            ),
+          }}
         />
-        <CustomButton variant="contained">Sign Up</CustomButton>
+        <CustomButton
+          loading={loading === "signup"}
+          disabled={loading === "signup"}
+          variant="contained"
+          onClick={() => {
+            handleSignup();
+          }}
+        >
+          Sign Up
+        </CustomButton>
       </Grid>
     </Grid>
   );

@@ -2,22 +2,24 @@ import { ListItem, ListItemButton, ListItemIcon, ListItemText, Popover, useTheme
 import { SettingsMenuProps } from "../../utils/types";
 import { Contrast, DarkMode, Logout } from "@mui/icons-material";
 import { useThemeContext } from "../../contexts/ThemeContextProvider";
+import useAuth from "../../hooks/useAuth";
 
 
 const SettingsMenu = ({
-  settingsMenuAnchorEl,
-  setSettingsMenuAnchorEl,
+  settingsAnchorEl,
+  setSettingsAnchorEl
 }: SettingsMenuProps) => {
     const theme = useTheme();
     const { mode, handleSetTheme } = useThemeContext();
-  if (settingsMenuAnchorEl) {
+    const {logout} = useAuth();
+  if (settingsAnchorEl) {
     return (
       <Popover
-        open={Boolean(settingsMenuAnchorEl)}
+        open={Boolean(settingsAnchorEl)}
         onClose={() => {
-          setSettingsMenuAnchorEl(null);
+          setSettingsAnchorEl(null);
         }}
-        anchorEl={settingsMenuAnchorEl}
+        anchorEl={settingsAnchorEl}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <ListItem>
@@ -37,7 +39,9 @@ const SettingsMenu = ({
           </ListItemButton>
         </ListItem>
         <ListItem>
-          <ListItemButton>
+          <ListItemButton onClick={() => {
+            logout();
+          }}>
             <ListItemIcon>
               <Logout />
             </ListItemIcon>
