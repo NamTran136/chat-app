@@ -1,10 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { AuthContextType, LoggedInUser } from "../utils/types";
-import { useCookies } from "react-cookie";
-import axios from "axios";
-import { VITE_SERVER_URL } from "../utils/constants";
+import { createContext, useEffect, useState } from "react";
+import { AuthContextType, LoggedInUser, User } from "../utils/types";
 import { useLocation, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import Cookies from 'js-cookie'
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext<AuthContextType>({
   loggedInUser: { isAuthenticated: false, user: null },
@@ -13,7 +11,6 @@ export const AuthContext = createContext<AuthContextType>({
 });
 
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cookies] = useCookies(["token"]);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>({
@@ -24,39 +21,33 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const authUser = async () => {
       setShowLoading(true);
-      if (cookies && cookies?.token && typeof cookies?.token === "string") {
         try {
-          const response = await axios.get(
-            `${VITE_SERVER_URL}/auth/verifyUser`,
-            { withCredentials: true }
-          );
-          if (response && response?.data) {
-            setLoggedInUser(response?.data ?? null);
+          const token = Cookies.get('token') as string;
+          if (Boolean(token)) {
+            const user = jwtDecode<User>(token);
+            setLoggedInUser({
+              isAuthenticated: true,
+              user,
+            });
+            Cookies.set("token", token, {
+              expires: 7,
+              secure: true,
+            });
             if (pathname === "/auth") {
               navigate("/");
             }
           }
-        } catch (error) {
+          else {
+            navigate("/auth");
+          }
+        } catch (error: any) {
           console.log(error);
-          toast.error(
-            error?.toString() ??
-              "Failed to authenticated and verify user. Please try again.",
-            {
-              style: {
-                borderRadius: "10px",
-                background: "#333",
-                color: "#fff",
-              },
-            }
-          );
+          navigate("/auth")
         }
-      } else {
-        navigate("/auth");
-      }
       setShowLoading(false);
     };
     authUser();
-  }, [cookies, navigate, pathname]);
+  }, [ navigate, pathname]);
   return (
     <AuthContext.Provider
       value={{ loggedInUser, setLoggedInUser, showLoading }}
@@ -66,7 +57,4 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export function useAuthContext() {
-  return useContext(AuthContext);
-}
 export default AuthContextProvider;

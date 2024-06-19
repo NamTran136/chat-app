@@ -1,22 +1,29 @@
-import { Drawer, Grid, Divider, List } from "@mui/material";
+import { Drawer, Grid, Divider, List, useMediaQuery } from "@mui/material";
 import ChatListHeader from "./ChatListHeader";
 import SearchChatListItem from "./SearchChatListItem";
 import ChatListHeading from "./ChatListHeading";
 import ChatListItems from "./ChatListItems";
+import { ChatListDrawerProps } from "../../utils/types";
+import { useConversationContext } from "../../hooks/useAllContextHooks";
 
-interface ChatListDrawerProps {
-  drawerWidth: number;
-}
-
-const ChatListDrawer = ({drawerWidth}: ChatListDrawerProps) => {
+const ChatListDrawer = ({
+  drawerWidth
+}: ChatListDrawerProps) => {
+  const {conversations} = useConversationContext();
+  const isTablet = useMediaQuery("(max-width: 768px)");
   return (
-    <Grid sx={{ width: { sm: drawerWidth } }}>
+    <Grid
+      sx={{
+        width: { sm: drawerWidth },
+        flexShrink: { sm: 0 },
+      }}
+    >
       <Drawer
         variant="permanent"
         sx={{
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
-            width: drawerWidth,
+            width: isTablet ? "100%" : drawerWidth,
           },
         }}
       >
@@ -26,7 +33,7 @@ const ChatListDrawer = ({drawerWidth}: ChatListDrawerProps) => {
           <SearchChatListItem />
           <Divider />
           <ChatListHeading />
-          <ChatListItems />
+          <ChatListItems conversations={conversations} />
         </List>
       </Drawer>
     </Grid>

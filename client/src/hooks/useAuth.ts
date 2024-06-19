@@ -1,15 +1,14 @@
-import { Message } from "./../utils/types";
 import { useState } from "react";
 import { SignupData } from "../utils/types";
 import { userLogin, userSignup } from "../api/authApiHandlers";
-import { useAuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
+import { useAuthContext } from "./useAllContextHooks";
+
 
 export default function useAuth() {
   const navigate = useNavigate();
-  const [_cookies, _, removeCookie] = useCookies(["token"]);
   const [loading, setLoading] = useState<"login" | "signup" | null>(null);
   const { setLoggedInUser } = useAuthContext();
   const [tabValue, setTabValue] = useState<number>(0);
@@ -53,8 +52,13 @@ export default function useAuth() {
     setLoading("signup");
     try {
       const response = await userSignup(signupData);
-      if (response && response?.data) {
-        setLoggedInUser({ isAuthenticated: true, user: response?.data });
+      console.log(response);
+      if (response && response?.status === 200) {
+        setLoggedInUser({ isAuthenticated: true, user: response?.data?.user });
+        Cookies.set("token", response?.data?.token, {
+          expires: 7,
+          secure: true,
+        });
         navigate("/");
       }
     } catch (error) {
@@ -74,19 +78,13 @@ export default function useAuth() {
     try {
       const response = await userLogin(loginData);
       console.log(response);
-      if (response && response?.data) {
-        if (!response?.data.user) {
-          toast.error(response?.data.message, {
-            style: {
-              borderRadius: "10px",
-              background: "#333",
-              color: "#fff",
-            },
-          });
-        } else {
-          setLoggedInUser({ isAuthenticated: true, user: response?.data });
-          navigate("/");
-        }
+      if (response && response?.status === 200) {
+        setLoggedInUser({ isAuthenticated: true, user: response?.data?.user });
+        Cookies.set("token", response?.data?.token, {
+          expires: 7,
+          secure: true,
+        });
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -100,8 +98,10 @@ export default function useAuth() {
     }
     setLoading(null);
   }
-  async function logout() {
-    await removeCookie("token");
+  function logout() {
+    Cookies.remove("token");
+    setLoggedInUser({ isAuthenticated: false, user: null });
+    navigate("/auth")
   }
 
   return {

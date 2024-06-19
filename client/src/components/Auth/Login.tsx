@@ -1,12 +1,12 @@
 import { Grid, IconButton, Paper, Typography, useTheme } from "@mui/material";
-import CustomTextField from "../../Custom/CustomTextField";
-import CustomButton from "../../Custom/CustomButton";
+import CustomTextField from "../Custom/CustomTextField";
+import CustomButton from "../Custom/CustomButton";
 import useAuth from "../../hooks/useAuth";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Login = () => {
   const theme = useTheme();
-  const {loading, loginData, handleLoginDataChange, handleLogin} = useAuth();
+  const { loading, loginData, handleLoginDataChange, handleLogin } = useAuth();
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid
