@@ -16,8 +16,8 @@ const ThemeContext = createContext<ThemeContextTypes>({
 
 export const useThemeContext = () => {
   return useContext(ThemeContext);
-}
-const ThemeContextProvider = ({children}:{children: React.ReactNode}) => {
+};
+const ThemeContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const themeMap = {
     light: lightTheme,
@@ -30,15 +30,14 @@ const ThemeContextProvider = ({children}:{children: React.ReactNode}) => {
 
   useEffect(() => {
     const localMode = localStorage.getItem("chatAppTheme");
-    if(localMode) {
+    if (localMode) {
       setMode(localMode as "light" | "dark");
-    }
-    else {
+    } else {
       setMode("dark");
     }
-  }, [])
+  }, []);
   return (
-    <ThemeContext.Provider value={{mode, handleSetTheme}}>
+    <ThemeContext.Provider value={{ mode, handleSetTheme }}>
       <ThemeProvider theme={themeMap[mode]}>{children}</ThemeProvider>
     </ThemeContext.Provider>
   );

@@ -10,10 +10,9 @@ export const userSignup = async (signupData: SignupData) => {
       email: signupData?.email,
       name: signupData?.fullName,
       password: signupData?.password,
-      imageUrl: signupData?.imageUrl,
+      imageUrl: signupData?.imageUrl
     },
   });
-  console.log(response);
   return response;
 };
 

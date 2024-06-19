@@ -1,7 +1,7 @@
-import { useTheme, TextField, TextFieldProps } from "@mui/material"
+import { TextField, TextFieldProps, useTheme } from "@mui/material";
 
 const CustomTextField = (props: TextFieldProps) => {
-    const theme = useTheme();
+  const theme = useTheme();
   return (
     <TextField
       {...props}
@@ -10,6 +10,7 @@ const CustomTextField = (props: TextFieldProps) => {
           borderBottomColor: theme.palette.divider,
         },
         "& .MuiOutlinedInput-root": {
+          bgcolor: theme.palette.background.default,
           color: theme.palette.text.secondary,
           borderRadius: 4,
           "& fieldset": {
@@ -25,6 +26,6 @@ const CustomTextField = (props: TextFieldProps) => {
       }}
     />
   );
-}
+};
 
-export default CustomTextField
+export default CustomTextField;

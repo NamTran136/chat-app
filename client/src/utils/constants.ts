@@ -5,23 +5,25 @@ export const VITE_IMAGE_KIT_PUBLIC_KEY = import.meta.env
   .VITE_IMAGE_KIT_PUBLIC_KEY;
 export const SERVER_ENDPOINTS = {
   AUTH: {
-    LOGIN: "auth/login",
-    SIGNUP: "auth/signup",
+    LOGIN: "Auth/login",
+    SIGNUP: "Auth/register",
   },
   CONVERSATION: {
-    CREATE: "conversation/create",
-    GET: "conversation",
-    DELETE: "conversation/delete",
+    CREATE: "Conversation/create",
+    CREATEGROUP: "Conversation/createGroup",
+    GET: "Conversation",
+    DELETE: "Conversation",
   },
   IMG_KIT: {
     DELETE: "img-kit/delete",
   },
   MESSAGE: {
-    CREATE: "message/create",
-    DELETE: "message/delete",
-    GET: "message",
+    CREATE: "Message/create",
+    CREATEHASFILE: "Message/createhasfile",
+    DELETE: "Message",
+    GET: "Message",
   },
   USERS: {
-    GET: "users/all",
+    GET: "Users/GetAll",
   },
 };

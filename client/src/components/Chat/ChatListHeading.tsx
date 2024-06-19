@@ -8,19 +8,18 @@ import {
   Popover,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import StartConversationModal from "../Conversation/StartConversationModal";
+import { useConversationContext } from "../../hooks/useAllContextHooks";
 
 const ChatListHeading = () => {
   const theme = useTheme();
-  const [addChatAnchorEl, setAddChatAnchorEl] = useState<HTMLElement | null>(
-    null
-  );
-  const [openCreateConversationModal, setOpenCreateConversationModal] =
-    useState<{isOpen: boolean; type: "DIRECT_MESSAGE" | "GROUP"}>({
-      isOpen: false,
-      type: "DIRECT_MESSAGE"
-    });
+  const {
+    addChatAnchorEl,
+    setAddChatAnchorEl,
+    setOpenCreateConversationModal,
+    openCreateConversationModal,
+  } = useConversationContext();
   return (
     <>
       <ListItem>
@@ -56,14 +55,14 @@ const ChatListHeading = () => {
             setAddChatAnchorEl(null);
           }}
           anchorEl={addChatAnchorEl}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
           <ListItem disablePadding>
             <ListItemButton
               onClick={() => {
                 setOpenCreateConversationModal({
                   isOpen: true,
-                  type: "DIRECT_MESSAGE"
+                  type: "DIRECT_MESSAGE",
                 });
               }}
             >
@@ -78,12 +77,14 @@ const ChatListHeading = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>{
-              setOpenCreateConversationModal({
-                isOpen: true,
-                type: "GROUP",
-              });
-            }}>
+            <ListItemButton
+              onClick={() => {
+                setOpenCreateConversationModal({
+                  isOpen: true,
+                  type: "GROUP",
+                });
+              }}
+            >
               <ListItemIcon>
                 <GroupAdd />
               </ListItemIcon>
@@ -100,7 +101,10 @@ const ChatListHeading = () => {
         <StartConversationModal
           open={openCreateConversationModal?.isOpen}
           onClose={() => {
-            setOpenCreateConversationModal({isOpen: false, type: "DIRECT_MESSAGE"});
+            setOpenCreateConversationModal({
+              isOpen: false,
+              type: "DIRECT_MESSAGE",
+            });
           }}
           type={openCreateConversationModal?.type}
         />

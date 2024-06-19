@@ -6,26 +6,58 @@ import {
   Grid,
   useTheme,
 } from "@mui/material";
-import CustomButton from "../../Custom/CustomButton";
-import CustomTextField from "../../Custom/CustomTextField";
-import AddUserListItem from "../../shared/AddUserListItem";
-import { StartConversationModalProps } from "../../utils/types";
+import CustomButton from "../Custom/CustomButton";
+import CustomTextField from "../Custom/CustomTextField";
+import AddUserListItem from "../shared/AddUserListItem";
+import { StartConversationModalProps, User } from "../../utils/types";
+import NoDataAvailable from "../shared/NoDataAvailable";
+import { useConversationContext } from "../../hooks/useAllContextHooks";
 
 const StartConversationModal = ({
   open,
   onClose,
-  type
+  type,
 }: StartConversationModalProps) => {
-    const theme = useTheme();
-    return (
+  const theme = useTheme();
+  const {
+    allUsers,
+    searchUserValue,
+    handleSearchUserChange,
+    selectedUserForConversation,
+    setSelectedUserForConversation,
+    handleCreateConversation,
+    groupTitle,
+    setGroupTitle,
+  } = useConversationContext();
+  const renderUsers = (usersList: User[]) => {
+    return usersList?.map((user: User) => (
+      <AddUserListItem
+        key={user?.id}
+        user={user}
+        selectedUsers={selectedUserForConversation}
+        setSelectedUsers={setSelectedUserForConversation}
+        type={type}
+      />
+    ));
+  };
+  function handleClose() {
+    onClose();
+    setGroupTitle("");
+    setSelectedUserForConversation([]);
+  }
+  return (
     <Dialog open={open} onClose={onClose} maxWidth="lg">
-      <DialogTitle color={theme.palette.text.secondary}>Select users to start a conversation</DialogTitle>
+      <DialogTitle color={theme.palette.text.secondary}>
+        Select users to start a conversation
+      </DialogTitle>
       <DialogContent>
         <Grid container flexDirection="column" gap={2} sx={{ width: "600px" }}>
           <CustomTextField
             size="small"
             placeholder="Search users to start conversation"
             variant="outlined"
+            value={searchUserValue}
+            onChange={handleSearchUserChange}
           />
           {type === "GROUP" && (
             <CustomTextField
@@ -34,6 +66,12 @@ const StartConversationModal = ({
               label="Group Title"
               placeholder="Please enter a group title"
               variant="outlined"
+              value={groupTitle}
+              onChange={(
+                event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => {
+                setGroupTitle(event.target.value);
+              }}
             />
           )}
           <Grid
@@ -44,17 +82,39 @@ const StartConversationModal = ({
             maxHeight="300px"
             sx={{ overflowY: "scroll" }}
           >
-            <AddUserListItem />
-            <AddUserListItem />
-            <AddUserListItem />
+            {allUsers && Array.isArray(allUsers) && allUsers?.length > 0 ? (
+              renderUsers(allUsers)
+            ) : (
+              <NoDataAvailable message="No users found" />
+            )}
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <CustomButton variant="text" onClick={()=>{
-            onClose();
-        }}>Close</CustomButton>
-        <CustomButton variant="contained">Create</CustomButton>
+        <CustomButton
+          sx={{ color: theme.palette.primary.main }}
+          variant="text"
+          onClick={() => {
+            handleClose();
+          }}
+        >
+          Close
+        </CustomButton>
+        <CustomButton
+          disabled={
+            type === "GROUP"
+              ? !groupTitle ||
+                !groupTitle?.trim()?.length ||
+                !selectedUserForConversation?.length
+              : !selectedUserForConversation?.length
+          }
+          disableRipple
+          sx={{ bgcolor: theme.palette.primary.main }}
+          variant="contained"
+          onClick={handleCreateConversation}
+        >
+          Create
+        </CustomButton>
       </DialogActions>
     </Dialog>
   );
